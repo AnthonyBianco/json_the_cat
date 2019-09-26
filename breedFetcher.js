@@ -1,20 +1,33 @@
 const request = require('request');
-const fs = require('fs');
-let inputRequest = process.argv.slice(2);
-// console log process argv
-let URLprefix = "https://api.thecatapi.com/v1/images/search?breed_id=";
-let URLrequest = URLprefix.concat(inputRequest);
+//let URLprefix = "https://api.thecatapi.com/v1/images/search?breed_id=";
+//let URLrequest = URLprefix.concat(inputRequest);
 
-request(URLrequest, (error, response, body)=> {
-  if (error) {
+
+
+const fetchBreedDescription = function (breedName, callback) {
+request("https://api.thecatapi.com/v1/breeds/search?q=" + breedName, (error, response, body)=> {
+  const data = JSON.parse(body);
+  if (error || data.length === 0) {
     console.log(error);
   } else {
-    const data = JSON.parse(body);
-    console.log(data[0].breeds[0].description);
+    callback(null, data[0].description);
   }
-  
-  
+
 });
+};
 
+module.exports = { fetchBreedDescription };
 
-// "https://api.thecatapi.com/v1/images/search?breed_id=beng"
+// var obj = {
+//   key1: {
+//     key3: {
+//       key5: 7
+//     }
+//   }
+// };
+
+// obj.key1.key3.key5 === 7
+
+// obj.key1.key3.keyB === 7 
+
+// obj.keyB.key3.key5 === 7
